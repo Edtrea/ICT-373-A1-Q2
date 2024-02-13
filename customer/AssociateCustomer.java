@@ -109,14 +109,7 @@ public class AssociateCustomer extends Customer {
      * @return The monthly email content for the associate customer
      */
     public String getMonthlyEmail(Magazine magazine) {
-        String email = "To: " + getEmail() + "\n";
-        email += "Dear " + getName() + ",\n";
-        email += "Your monthly payment for the magazine service is $" + calculateMonthlyPayment(magazine) + ".\n";
-        email += "You are currently subscribed to the following supplements:\n";
-        for (Supplement supplement : getSupplements()) {
-            email += supplement.getName() + "\n";
-        }
-        return email;
+        return "";
     }
 
 }

@@ -233,6 +233,7 @@ public class PayingCustomer extends Customer {
         email += "The total amount due for the month is: " + this.calculateMonthlyPayment(magazine);
         // Itemized cost for the customer
         email += "The itemized cost for the month is:\n";
+        email += "Magazine: " + magazine.getWeeklyCost() * 4 + "\n";
         for (Supplement supplement : this.getSupplements()) {
             // Calculate monthly cost for the supplement from the weekly cost
             email += supplement.getName() + ": " + supplement.getWeeklyCost() * 4 + "\n";
