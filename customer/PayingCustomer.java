@@ -156,7 +156,7 @@ public class PayingCustomer extends Customer {
      * @param associateCustomer The associate customer to be added
      */
     public void addAssociateCustomer(AssociateCustomer associateCustomer) {
-        associateCustomers.add(associateCustomer);
+        this.associateCustomers.add(associateCustomer);
     }
 
     /**
@@ -227,26 +227,32 @@ public class PayingCustomer extends Customer {
      */
 
     public String getMonthlyEmail(Magazine magazine) {
-        String email = "To: " + this.getEmail() + "\n";
-        email += "Dear " + this.getName() + ",\n";
+        StringBuilder email = new StringBuilder();
+        email.append("To: " + this.getEmail() + "\n");
+        email.append("Dear " + this.getName() + ",\n");
         // Total cost for the customer
-        email += "The total amount due for the month is: " + this.calculateMonthlyPayment(magazine);
+        email.append("The total amount due for the month is: " + this.calculateMonthlyPayment(magazine));
         // Itemized cost for the customer
-        email += "The itemized cost for the month is:\n";
-        email += "Magazine: " + magazine.getWeeklyCost() * 4 + "\n";
+        email.append("\nThe itemized cost for the month is:\n");
+        email.append("Magazine: " + magazine.getWeeklyCost() * 4 + "\n");
         for (Supplement supplement : this.getSupplements()) {
             // Calculate monthly cost for the supplement from the weekly cost
-            email += supplement.getName() + ": " + supplement.getWeeklyCost() * 4 + "\n";
+            email.append(supplement.getName() + ": " + supplement.getWeeklyCost() * 4 + "\n");
         }
         // Get the list of associate customers from the paying customer's attribute
         ArrayList<AssociateCustomer> associateCustomers = ((PayingCustomer) this).getAssociateCustomers();
         for (AssociateCustomer associateCustomer : associateCustomers) {
             // Calculate monthly cost for the supplement from the weekly cost
-            email += "Associate customer " + associateCustomer.getName() + ":\n";
+            email.append("Associate customer " + associateCustomer.getName() + ":\n");
+            email.append("Magazine: " + magazine.getWeeklyCost() * 4 + "\n");
             for (Supplement supplement : associateCustomer.getSupplements()) {
-                email += supplement.getName() + ": " + supplement.getWeeklyCost() * 4 + "\n";
+                email.append(supplement.getName() + ": " + supplement.getWeeklyCost() * 4 + "\n");
             }
         }
-        return email;
+        // Charge to the payment method and payment detail
+        email.append("The amount will be charged to your " + this.getPaymentMethod() + " with the details: "
+                + this.getPaymentDetail() + "\n");
+
+        return email.toString();
     }
 }

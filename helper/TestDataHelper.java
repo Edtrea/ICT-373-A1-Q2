@@ -163,6 +163,7 @@ public class TestDataHelper {
                 }
             }
             System.out.println("Does the customer subscribe to any supplements? (y/n)");
+            scanner.nextLine();
             String response = scanner.nextLine();
             if (response.equals("y")) {
                 for (int i = 0; i < supplementsList.size(); i++) {
@@ -186,6 +187,7 @@ public class TestDataHelper {
                         continue;
                     }
                     System.out.println("Do you want to add another supplement? (y/n)");
+                    scanner.nextLine();
                     response = scanner.nextLine().toLowerCase().trim();
                     if (response.equals("n")) {
                         break;
@@ -400,11 +402,6 @@ public class TestDataHelper {
         try (Scanner scanner = new Scanner(System.in)) {
             ArrayList<Customer> customers = new ArrayList<Customer>();
             while (true) {
-                System.out.println("Do you want to add a customer? (y/n)");
-                String response = scanner.nextLine();
-                if (response.equals("n")) {
-                    break;
-                }
                 Customer customer = createTestCustomer(customers, supplementsList);
                 if (customer != null) {
                     // If customer is an associate customer, add the associate customer to the
@@ -424,6 +421,13 @@ public class TestDataHelper {
                         }
                     }
                     customers.add(customer);
+                } else {
+                    return null;
+                }
+                System.out.println("Do you want to add a customer? (y/n)");
+                String response = scanner.nextLine();
+                if (response.equals("n")) {
+                    break;
                 }
             }
             return customers;
@@ -452,10 +456,9 @@ public class TestDataHelper {
         userSupplements.add(supplementsList.get(0));
         userSupplements.add(supplementsList.get(1));
         customers
-                .add(new PayingCustomer("Paying Customer 1", "paycust1@mail.com", userSupplements, "card", 1111111111,
-                        null));
+                .add(new PayingCustomer("Paying Customer 1", "paycust1@mail.com", userSupplements, "card", 1111111111));
         // Create 1 paying customer without supplements
-        customers.add(new PayingCustomer("Paying Customer 2", "paycust2@mail.com", "card", 222222222, null));
+        customers.add(new PayingCustomer("Paying Customer 2", "paycust2@mail.com", "card", 222222222));
         // Create 1 paying customer without associate customers
         userSupplements.clear();
         userSupplements.add(supplementsList.get(2));

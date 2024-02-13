@@ -31,6 +31,7 @@ import helper.TestDataHelper;
 
 public class Client {
     public static void main(String[] args) {
+        System.out.println(displayStudentDetails());
         try (// initialize scanner
                 Scanner scanner = new Scanner(System.in)) {
             String response;
@@ -75,7 +76,15 @@ public class Client {
             ArrayList<Customer> customers;
             while (true) {
                 if (response.equals("y")) {
-                    customers = TestDataHelper.createTestCustomers(supplements);
+                    while (true) {
+                        customers = TestDataHelper.createTestCustomers(supplements);
+                        if (customers == null) {
+                            System.out.println("Invalid input. Please try again.");
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
                 } else {
                     customers = TestDataHelper.createPreBuiltCustomers(supplements);
                     break;
@@ -95,6 +104,7 @@ public class Client {
                 System.out.println("e. add a new customer to the magazine service");
                 System.out.println("f. remove an existing customer from the magazine service");
                 System.out.println("exit. Exit program");
+                System.out.println();
                 response = scanner.nextLine();
                 switch (response) {
                     case "c":
@@ -104,8 +114,8 @@ public class Client {
                          * Each week, each customer gets an email telling them their magazine is ready
                          * to look at and listing the supplements that they currently subscribe to.
                          */
-                        for (int i = 0; i < customers.size(); i++) {
-                            System.out.println("Week " + (i + 1) + " emails:");
+                        for (int i = 0; i < 4; i++) {
+                            System.out.println("Week " + (i + 1) + " emails:\n");
                             for (Customer customer : customers) {
                                 System.out.println(customer.getWeeklyEmail());
                             }
@@ -157,5 +167,15 @@ public class Client {
                 }
             }
         }
+    }
+
+    static String displayStudentDetails() {
+        StringBuilder studentDetails = new StringBuilder();
+        studentDetails.append("Name: Lim Wen Chao\n");
+        studentDetails.append("Student ID: 34368872\n");
+        studentDetails.append("Mode of Enrolment: Kaplan Singapore\n");
+        studentDetails.append("Tutor Name: Andy Lee Kok Eng\n");
+        studentDetails.append("Tutorial Day and Time: Tuesday 2:15PM\n");
+        return studentDetails.toString();
     }
 }
