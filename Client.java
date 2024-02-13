@@ -1,13 +1,12 @@
+
 /**
  * @Title: ICT 373 A1
  * @Author: Lim Wen Chao
- * @Date: 2024/2/2
+ * @Date: 2/2/2024
  * @File: Client.java
- * @Version: 1.0
- * @Revision: none
- * @Usage: This is the main class for the project.
+ * @Purpose: This is the main class for the project.
  * The client program is to test the functionality of the classes and methods in the project.
- * @Description: This class is used to test the functionality of the classes and methods in the project.
+ * This class is used to test the functionality of the classes and methods in the project.
  * The client program should do the following: 
  * a. construct a magazine with an array of 3-4 supplements with made-up details built in to the 
 program (keep provision of inputs from the user using the Java Scanner class), 
@@ -16,19 +15,19 @@ program (keep provision of inputs from the user using the Java Scanner class),
  * c. print out the text of all the emails for all customers for four weeks of magazines, 
  * d. print out the text for the end of month emails for the paying customers, 
  * e. add a new customer to the magazine service, 
- * f. remove an existing customer from the magazine service, 
+ * f. remove an existing customer from the magazine service
+ * @Assumptions: 
+ * 1. When asking if a user wants to create their own test data, any answer other than ‘y’ will be assumed to request to use pre-built test data
+ * @Limitations:
  */
-package src;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import src.Magazine.Magazine;
-import src.Magazine.Supplement;
-import src.customer.Customer;
-import src.customer.PayingCustomer;
-import src.helper.EmailHelper;
-import src.helper.TestDataHelper;
+import magazine.*;
+import customer.Customer;
+import customer.PayingCustomer;
+import helper.TestDataHelper;
 
 public class Client {
     public static void main(String[] args) {
@@ -43,7 +42,8 @@ public class Client {
              * Ask user if they want to create thier own set of supplements or use pre-built
              * ones
              */
-            System.out.println("Do you want to create your own test magazine or use pre-built? (y/n)");
+            System.out.println(
+                    "Do you want to create your own test magazine? If not, pre-built test data are available. (y/n)");
             response = scanner.nextLine();
             Magazine magazine;
             if (response.equals("y")) {
@@ -52,7 +52,8 @@ public class Client {
                 magazine = TestDataHelper.createPreBuiltMagazine();
             }
 
-            System.err.println("Do you want to create your own test supplements or use pre-built? (y/n)");
+            System.err.println(
+                    "Do you want to create your own test supplements? If not, pre-built test data are avilable. (y/n)");
             response = scanner.nextLine();
             ArrayList<Supplement> supplements;
             if (response.equals("y")) {
@@ -68,7 +69,8 @@ public class Client {
              * Ask the user if they want to create their own test customers or use pre-built
              * ones
              */
-            System.out.println("Do you want to create your own test customers or use pre-built? (y/n)");
+            System.out.println(
+                    "Do you want to create your own test customers? If not, pre-built test data are available. (y/n)");
             response = scanner.nextLine();
             ArrayList<Customer> customers;
             while (true) {
@@ -76,11 +78,6 @@ public class Client {
                     customers = TestDataHelper.createTestCustomers(supplements);
                 } else {
                     customers = TestDataHelper.createPreBuiltCustomers(supplements);
-                    break;
-                }
-                System.out.println("Do you want to add more customers? (y/n)");
-                response = scanner.nextLine();
-                if (response.equals("n")) {
                     break;
                 }
             }
@@ -110,7 +107,7 @@ public class Client {
                         for (int i = 0; i < customers.size(); i++) {
                             System.out.println("Week " + (i + 1) + " emails:");
                             for (Customer customer : customers) {
-                                System.out.println(EmailHelper.getWeeklyEmail(customer, magazine));
+                                System.out.println(customer.getWeeklyEmail());
                             }
                         }
                         break;
@@ -123,7 +120,7 @@ public class Client {
                          */
                         for (Customer customer : customers) {
                             if (customer instanceof PayingCustomer) {
-                                System.out.println(EmailHelper.getMonthlyEmail(customer, magazine));
+                                System.out.println(customer.getMonthlyEmail(magazine));
                             }
                         }
                         break;

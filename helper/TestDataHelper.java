@@ -1,10 +1,10 @@
 /**
+ * @Title: ICT 373 A1
  * @Author: Lim Wen Chao
- * @Date: 2024/2/2
- * @Version: 1.0
- * @Revision: none
- * @Usage: A helper class that provides test data for the application either from user inputs or pre-defined data
- * @Description: Contains 4 methods to provide test data for the application
+ * @Date: 2/2/2024
+ * @File: TestDataHelper.java
+ * @Purpose: A helper class that provides test data for the application either from user inputs or pre-defined data
+ * Contains the following methods:
  * 1. createTestMagazine() - creates a test magazine object from user input
  * 2. createPreBuiltMagazine() - creates a magazine object with pre-defined data
  * 3. createTestSupplements() - creates an arrayList of test supplement objects from user input
@@ -17,17 +17,17 @@
  * 10. removeCustomer() - removes a customer from the customers list
  * 
  * Inputs should be validated with the ValidationHelper class before being passed to the methods in this class
+ * @Assumptions: 
+ * @Limitations:
  */
 
-package src.helper;
+package helper;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import src.Magazine.Magazine;
-import src.Magazine.Supplement;
-import src.customer.AssociateCustomer;
-import src.customer.Customer;
-import src.customer.PayingCustomer;
+
+import magazine.*;
+import customer.*;
 
 public class TestDataHelper {
     /**
@@ -36,22 +36,21 @@ public class TestDataHelper {
      * @return A test magazine object
      */
     public static Magazine createTestMagazine() {
-        Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNext()) {
-            System.out.println("Enter the weekly cost of the magazine: ");
-            // if the next is a Double
-            if (scanner.hasNextDouble()) {
-                double weeklyCost = scanner.nextDouble();
-                scanner.close();
-                return new Magazine(weeklyCost);
-            }
-            // if no Double is found
-            else {
-                System.out.println("A double value expected :"
-                        + scanner.next());
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (scanner.hasNext()) {
+                System.out.println("Enter the weekly cost of the magazine: ");
+                // if the next is a Double
+                if (scanner.hasNextDouble()) {
+                    double weeklyCost = scanner.nextDouble();
+                    return new Magazine(weeklyCost);
+                }
+                // if no Double is found
+                else {
+                    System.out.println("A double value expected :"
+                            + scanner.next());
+                }
             }
         }
-        scanner.close();
         return null;
     }
 
@@ -74,18 +73,25 @@ public class TestDataHelper {
             ArrayList<Supplement> supplements = new ArrayList<Supplement>();
 
             while (true) {
-                System.out.println("Do you want to add a supplement? (y/n)");
-                String response = scanner.nextLine();
-                if (response.equals("n")) {
-                    break;
+                String name;
+                double weeklyCost;
+
+                while (true) {
+                    System.out.println("Enter the name of the supplement: ");
+                    name = scanner.next();
+                    if (name.isEmpty()) {
+                        System.out.println("Name is mandatory :"
+                                + name);
+                    } else {
+                        break;
+                    }
                 }
-                System.out.println("Enter the name of the supplement: ");
-                String name = scanner.next();
+
                 while (true) {
                     System.out.println("Enter the weekly cost of the supplement: ");
                     // if the next is a Double
                     if (scanner.hasNextDouble()) {
-                        double weeklyCost = scanner.nextDouble();
+                        weeklyCost = scanner.nextDouble();
                         supplements.add(new Supplement(name, weeklyCost));
                         break;
                     }
@@ -94,6 +100,11 @@ public class TestDataHelper {
                         System.out.println("A double value expected :"
                                 + scanner.next());
                     }
+                }
+                System.out.println("Do you want to add another supplement? (y/n)");
+                String response = scanner.nextLine();
+                if (response.equals("n")) {
+                    break;
                 }
             }
             return supplements;
@@ -129,12 +140,28 @@ public class TestDataHelper {
             String name;
             String email;
             ArrayList<Supplement> userSupplements = new ArrayList<>();
-            boolean isPayingCustomer = false;
 
-            System.out.println("Enter the name of the customer: ");
-            name = scanner.next();
-            System.out.println("Enter the email of the customer: ");
-            email = scanner.next();
+            while (true) {
+                System.out.println("Enter the name of the customer: ");
+                name = scanner.next();
+                if (name.isEmpty()) {
+                    System.out.println("Name is mandatory :"
+                            + name);
+                } else {
+                    break;
+                }
+            }
+
+            while (true) {
+                System.out.println("Enter the email of the customer: ");
+                email = scanner.next();
+                if (email.isEmpty()) {
+                    System.out.println("Email is mandatory :"
+                            + email);
+                } else {
+                    break;
+                }
+            }
             System.out.println("Does the customer subscribe to any supplements? (y/n)");
             String response = scanner.nextLine();
             if (response.equals("y")) {
@@ -147,27 +174,36 @@ public class TestDataHelper {
                     System.out.println("Enter the number of the supplement that is beside the name: ");
                     if (scanner.hasNextInt()) {
                         int supplementNum = scanner.nextInt();
-                        userSupplements.add(supplementsList.get(supplementNum - 1));
+                        if (supplementNum > 0 && supplementNum <= supplementsList.size()) {
+                            userSupplements.add(supplementsList.get(supplementNum - 1));
+                        } else {
+                            System.out.println("Not a valid number :"
+                                    + supplementNum);
+                        }
                     } else {
                         System.out.println("Not a valid number :"
                                 + scanner.next());
+                        continue;
                     }
                     System.out.println("Do you want to add another supplement? (y/n)");
-                    response = scanner.nextLine();
+                    response = scanner.nextLine().toLowerCase().trim();
                     if (response.equals("n")) {
                         break;
                     }
                 }
             }
-            System.out.println("Is the customer a paying customer or an associate customer? (p/a)");
-            response = scanner.nextLine();
-            if (response.equals("p")) {
-                isPayingCustomer = true;
-            }
-            if (isPayingCustomer) {
-                return createTestPayingCustomer(customers, name, email, userSupplements);
-            } else {
-                return createTestAssociateCustomer(customers, name, email, userSupplements);
+
+            while (true) {
+                System.out.println("Is the customer a paying customer or an associate customer? (p/a)");
+                response = scanner.nextLine().toLowerCase().trim();
+                if (response.equals("p")) {
+                    return createTestPayingCustomer(customers, name, email, userSupplements);
+                } else if (response.equals("a")) {
+                    return createTestAssociateCustomer(customers, name, email, userSupplements);
+                } else {
+                    System.out.println("Not a valid response :"
+                            + response);
+                }
             }
         }
     }
@@ -214,7 +250,7 @@ public class TestDataHelper {
             while (true) {
                 System.out.println("Enter the payment detail of the customer: ");
                 if (scanner.hasNext()) {
-                    paymentDetail = scanner.next();
+                    paymentDetail = scanner.next().toLowerCase().trim();
                     // Validate payment detail
                     if (ValidationHelper.validatePaymentDetails(paymentDetail)) {
                         break;
@@ -254,52 +290,53 @@ public class TestDataHelper {
                     System.out.println("The customer will be created without any associate customers.");
                     // Create a new paying customer object with the user input
                     if (userSupplements.isEmpty() == false) {
-                        return new PayingCustomer(name, email, userSupplements, paymentMethod, paymentDetail);
+                        return new PayingCustomer(name, email, userSupplements, paymentMethod,
+                                Integer.parseInt(paymentDetail));
                     } else {
-                        return new PayingCustomer(name, email, paymentMethod, paymentDetail);
-                    }
-                } else {
-                    // Display the list of associate customers
-                    for (int i = 0; i < associateCustomersList.size(); i++) {
-                        System.out.println(i + 1 + ". " + associateCustomersList.get(i).getName());
-                    }
-
-                    // Ask user for the number of associate customers the customer has
-                    System.out.println("Enter the number of associate customers the customer has: ");
-                    int numAssociateCustomers = scanner.nextInt();
-                    // Ask user which associate customers the customer has based on the displayed
-                    // list
-                    for (int i = 0; i < numAssociateCustomers; i++) {
-                        System.out.println("Enter the number of the associate customer that is beside the name: ");
-                        int associateCustomerNum = scanner.nextInt();
-                        if (associateCustomerNum > 0 && associateCustomerNum <= associateCustomersList.size()) {
-                            userAssociateCustomers
-                                    .add((AssociateCustomer) associateCustomersList.get(associateCustomerNum - 1));
-                        } else {
-                            System.out.println("Not a valid number :"
-                                    + associateCustomerNum);
+                        // Display the list of associate customers
+                        for (int i = 0; i < associateCustomersList.size(); i++) {
+                            System.out.println(i + 1 + ". " + associateCustomersList.get(i).getName());
                         }
-                        userAssociateCustomers
-                                .add((AssociateCustomer) associateCustomersList.get(associateCustomerNum - 1));
-                    }
 
-                    // Create a new paying customer object with the user input
-                    if (userSupplements.isEmpty() == false && userAssociateCustomers != null) {
-                        return new PayingCustomer(name, email,
-                                userSupplements, paymentMethod, paymentDetail,
-                                userAssociateCustomers);
-                    } else if (userSupplements.isEmpty() == false && userAssociateCustomers == null) {
-                        return new PayingCustomer(name, email, userSupplements, paymentMethod, paymentDetail);
-                    } else if (userAssociateCustomers != null && userSupplements.isEmpty() == true) {
-                        return new PayingCustomer(name, email, paymentMethod, paymentDetail,
-                                userAssociateCustomers);
-                    } else {
-                        return new PayingCustomer(name, email, paymentMethod, paymentDetail);
+                        while (true) {
+                            // Ask user which associate customers the customer has based on the displayed
+                            // list
+                            System.out.println("Enter the number of the associate customer that is beside the name: ");
+                            int associateCustomerNum = scanner.nextInt();
+                            if (associateCustomerNum > 0 && associateCustomerNum <= associateCustomersList.size()) {
+                                userAssociateCustomers
+                                        .add((AssociateCustomer) associateCustomersList.get(associateCustomerNum - 1));
+                            } else {
+                                System.out.println("Not a valid number :"
+                                        + associateCustomerNum);
+                            }
+                            // Ask user if there are more associate customers to add
+                            System.out.println("Do you want to add another associate customer? (y/n)");
+                            response = scanner.nextLine();
+                            if (response.equals("n")) {
+                                break;
+                            }
+                        }
+
+                        // Create a new paying customer object with the user input
+                        if (userSupplements.isEmpty() == false && userAssociateCustomers != null) {
+                            return new PayingCustomer(name, email,
+                                    userSupplements, paymentMethod, Integer.parseInt(paymentDetail),
+                                    userAssociateCustomers);
+                        } else if (userSupplements.isEmpty() == false && userAssociateCustomers == null) {
+                            return new PayingCustomer(name, email, userSupplements, paymentMethod,
+                                    Integer.parseInt(paymentDetail));
+                        } else if (userAssociateCustomers != null && userSupplements.isEmpty() == true) {
+                            return new PayingCustomer(name, email, paymentMethod, Integer.parseInt(paymentDetail),
+                                    userAssociateCustomers);
+                        } else {
+                            return new PayingCustomer(name, email, paymentMethod, Integer.parseInt(paymentDetail));
+                        }
                     }
                 }
             }
+            return null;
         }
-        return null;
     }
 
     /**
@@ -320,6 +357,7 @@ public class TestDataHelper {
             String email, ArrayList<Supplement> userSupplements) {
         try (Scanner scanner = new Scanner(System.in)) {
             ArrayList<PayingCustomer> payingCustomersList = new ArrayList<PayingCustomer>();
+            PayingCustomer payingCustomer = null;
             // Display the list of paying customers
             for (int i = 0; i < customers.size(); i++) {
                 if (customers.get(i) instanceof PayingCustomer) {
@@ -327,7 +365,7 @@ public class TestDataHelper {
                 }
             }
             if (payingCustomersList.isEmpty()) {
-                System.out.println("There are no paying customers in the list. Please add a paying customer first.");
+                System.out.println("There are no paying customers. Please add a paying customer first.");
                 return null;
             }
             for (int i = 0; i < payingCustomersList.size(); i++) {
@@ -338,18 +376,15 @@ public class TestDataHelper {
             System.out.println("Enter the number of the paying customer that is beside the name: ");
             int payingCustomerNum = scanner.nextInt();
             if (payingCustomerNum > 0 && payingCustomerNum <= payingCustomersList.size()) {
-                payingCustomersList.get(payingCustomerNum - 1);
+                payingCustomer = payingCustomersList.get(payingCustomerNum - 1);
             } else {
-                System.out.println("Not a valid number :"
-                        + payingCustomerNum);
+                System.out.println("Not a valid number :" + payingCustomerNum);
             }
             // Create a new associate customer object with the user input
             if (userSupplements.isEmpty() == false) {
-                return new AssociateCustomer(name, email,
-                        userSupplements,
-                        payingCustomersList.get(payingCustomerNum - 1));
+                return new AssociateCustomer(name, email, userSupplements, payingCustomer);
             } else {
-                return new AssociateCustomer(name, email, payingCustomersList.get(payingCustomerNum - 1));
+                return new AssociateCustomer(name, email, payingCustomer);
             }
         }
     }
@@ -397,12 +432,14 @@ public class TestDataHelper {
 
     /**
      * Method to create an arrayList of customer objects with pre-defined data
-     * 1. Create 1 paying customer with all parameters
-     * 2. Create 1 paying customer without supplements
-     * 3. Create 1 paying customer without associate customers
-     * 4. Create 1 paying customer without supplements and associate customers
-     * 5. Create 2 associate customer with all parameters
-     * 6. Create 2 associate customer without supplements
+     * 0. Create 1 paying customer with all parameters
+     * 1. Create 1 paying customer without supplements
+     * 2. Create 1 paying customer without associate customers
+     * 3. Create 1 paying customer without supplements and associate customers
+     * 4. Create 1 associate customer with all parameters, attached to customer 0
+     * 5. Create 1 associate customer with all parameters, attached to
+     * customer 1
+     * 6. Create 1 associate customer without supplements, attached to customer 1
      * 
      * @param supplementsList An arrayList of supplement objects this list is
      *                        assumed to contain at least 5 supplements
@@ -415,17 +452,17 @@ public class TestDataHelper {
         userSupplements.add(supplementsList.get(0));
         userSupplements.add(supplementsList.get(1));
         customers
-                .add(new PayingCustomer("Paying Customer 1", "paycust1@mail.com", userSupplements, "card", "1234567890",
+                .add(new PayingCustomer("Paying Customer 1", "paycust1@mail.com", userSupplements, "card", 1111111111,
                         null));
         // Create 1 paying customer without supplements
-        customers.add(new PayingCustomer("Paying Customer 2", "paycust2@mail.com", "card", "1234567890", null));
+        customers.add(new PayingCustomer("Paying Customer 2", "paycust2@mail.com", "card", 222222222, null));
         // Create 1 paying customer without associate customers
         userSupplements.clear();
         userSupplements.add(supplementsList.get(2));
         customers.add(
-                new PayingCustomer("Paying Customer 3", "paycust3@mail.com", userSupplements, "card", "1234567890"));
+                new PayingCustomer("Paying Customer 3", "paycust3@mail.com", userSupplements, "card", 333333333));
         // Create 1 paying customer without supplements and associate customers
-        customers.add(new PayingCustomer("Paying Customer 4", "paycust4@gmail.com", "card", "1234567890"));
+        customers.add(new PayingCustomer("Paying Customer 4", "paycust4@gmail.com", "card", 1234567890));
         // Create 2 associate customer with all parameters
         userSupplements.clear();
         userSupplements.add(supplementsList.get(3));
@@ -438,8 +475,7 @@ public class TestDataHelper {
         customers.add(new AssociateCustomer("Associate Customer 2", "assocust2@gmail.com", userSupplements,
                 customers.get(1)));
         // Create 2 associate customer without supplements
-        customers.add(new AssociateCustomer("Associate Customer 3", "assocust3@gmail.com", customers.get(0)));
-        customers.add(new AssociateCustomer("Associate Customer 4", "assocust4@gmail.com", customers.get(1)));
+        customers.add(new AssociateCustomer("Associate Customer 3", "assocust4@gmail.com", customers.get(1)));
 
         // Add the associate customers to the paying customer's associate customers list
         // Add associate customer 1 to the paying customer's associate customers list
@@ -447,9 +483,7 @@ public class TestDataHelper {
         // Add associate customer 2 to the paying customer's associate customers list
         ((PayingCustomer) customers.get(1)).addAssociateCustomer((AssociateCustomer) customers.get(5));
         // Add associate customer 3 to the paying customer's associate customers list
-        ((PayingCustomer) customers.get(0)).addAssociateCustomer((AssociateCustomer) customers.get(6));
-        // Add associate customer 4 to the paying customer's associate customers list
-        ((PayingCustomer) customers.get(1)).addAssociateCustomer((AssociateCustomer) customers.get(7));
+        ((PayingCustomer) customers.get(1)).addAssociateCustomer((AssociateCustomer) customers.get(6));
 
         return customers;
     }
@@ -458,7 +492,7 @@ public class TestDataHelper {
      * Method to remove a customer from the customers list
      * 
      * @param customers An arrayList of customer objects
-     * @param customer  The customer to remove from the customers list
+     * @param customer  The Paying customer to remove from the customers list
      * @return
      */
     public static ArrayList<Customer> removeCustomer(ArrayList<Customer> customers, Customer customer) {
@@ -467,16 +501,16 @@ public class TestDataHelper {
         // if it is an associate customer, remove it from the paying customer's list as
         // well
         if (customer instanceof PayingCustomer) {
-            for (int i = 0; i < ((PayingCustomer) customer).getAssociateCustomers().size(); i++) {
-                ((PayingCustomer) customer).getAssociateCustomers().remove(i);
+            ArrayList<AssociateCustomer> associateCustomers = ((PayingCustomer) customer).getAssociateCustomers();
+            for (AssociateCustomer associateCustomer : associateCustomers) {
+                // Remove the associate customer from customers list
+                customers.remove(associateCustomer);
             }
         } else {
-            for (int i = 0; i < customers.size(); i++) {
-                if (customers.get(i) instanceof PayingCustomer) {
-                    ((PayingCustomer) customers.get(i)).getAssociateCustomers().remove(customer);
-                }
-            }
+            PayingCustomer payingCustomer = (PayingCustomer) ((AssociateCustomer) customer).getPayingCustomer();
+            customers.remove(payingCustomer);
         }
+
         customers.remove(customer);
         return customers;
     }

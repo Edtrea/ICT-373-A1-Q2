@@ -1,18 +1,19 @@
 /**
- * @File: ValidationHelper.java
+ * @Title: ICT 373 A1
  * @Author: Lim Wen Chao
- * @Date: 2024/2/2
- * @Version: 1.0
- * @Revision: none
- * @Usage: A class that contains helper methods for validation
- * @Description: Contains methods for the following validations:
+ * @Date: 2/2/2024
+ * @File: ValidationHelper.java
+ * @Purpose: A class that contains helper methods for validation
+ * Contains methods for the following validations:
  * 1. Email validation
  * 2. Name validation
  * 4. Payment method validation (card / bank account only)
  * 5. Payment details validation (card number or bank account number only)
+ * @Assumptions:
+ * @Limitations:
  */
 
-package src.helper;
+package helper;
 
 public class ValidationHelper {
     /**

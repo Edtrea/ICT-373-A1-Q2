@@ -1,14 +1,14 @@
 /**
- * @Project: Magazine Service
- * @File: Magazine.java
+ * @Title: ICT 373 A1
  * @Author: Lim Wen Chao
- * @Date: 2024/2/2
- * @Version: 1.0
- * @Revision: none
- * @Usage: Magazine class is a class that represents a magazine object.
- * @Description: A magazine has a weekly cost
+ * @Date: 2/2/2024
+ * @File: Magazine.java
+ * @Purpose: A class that represents a magazine object.
+ * A magazine has a weekly cost
+ * @Assumptions:
+ * @Limitations:
  */
-package src.Magazine;
+package magazine;
 
 public class Magazine {
     /**

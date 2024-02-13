@@ -1,12 +1,18 @@
 /**
- * This class is used to create an Associate Customer object.
+ * @Title: ICT373 Assignment 1
+ * @Author: Lim Wen Chao
+ * @Date: 2/2/2024
+ * @File: AssociateCustomer.java
+ * @Purpose: A child class of Customer that represents an associate customer
  * An Associate Customer is a customer whose subscription is paid for by a specified Paying Customer.
+ * @Assumptions:
+ * @Limitations:
  */
 
-package src.customer;
+package customer;
 
 import java.util.ArrayList;
-import src.Magazine.Supplement;
+import magazine.*;
 
 public class AssociateCustomer extends Customer {
     // The paying customer for the associate customer
@@ -55,4 +61,62 @@ public class AssociateCustomer extends Customer {
     public void setPayingCustomer(Customer payingCustomer) {
         this.payingCustomer = (PayingCustomer) payingCustomer;
     }
+
+    /*
+     * Calculate the weekly payment due for the associate customer
+     * 
+     * @return The weekly payment due for the associate customer
+     */
+    public double calculateWeeklyPayment(Magazine magazine) {
+        double weeklyPayment = magazine.getWeeklyCost();
+        for (Supplement supplement : getSupplements()) {
+            weeklyPayment += supplement.getWeeklyCost();
+        }
+        return weeklyPayment;
+    }
+
+    /*
+     * Calculate the monthly payment due for the associate customer
+     * 
+     * @return The monthly payment due for the associate customer
+     */
+    public double calculateMonthlyPayment(Magazine magazine) {
+        double monthlyPayment = magazine.getWeeklyCost() * 4;
+        for (Supplement supplement : getSupplements()) {
+            monthlyPayment += supplement.getWeeklyCost() * 4;
+        }
+        return monthlyPayment;
+    }
+
+    /*
+     * Returns the weekly email content for the associate customer
+     * 
+     * @return The weekly email content for the associate customer
+     */
+    public String getWeeklyEmail() {
+        String email = "To: " + getEmail() + "\n";
+        email += "Dear " + getName() + ",\n";
+        email += "Your magazine is ready to look at. You are currently subscribed to the following supplements:\n";
+        for (Supplement supplement : getSupplements()) {
+            email += supplement.getName() + "\n";
+        }
+        return email;
+    }
+
+    /*
+     * Returns the monthly email content for the associate customer
+     * 
+     * @return The monthly email content for the associate customer
+     */
+    public String getMonthlyEmail(Magazine magazine) {
+        String email = "To: " + getEmail() + "\n";
+        email += "Dear " + getName() + ",\n";
+        email += "Your monthly payment for the magazine service is $" + calculateMonthlyPayment(magazine) + ".\n";
+        email += "You are currently subscribed to the following supplements:\n";
+        for (Supplement supplement : getSupplements()) {
+            email += supplement.getName() + "\n";
+        }
+        return email;
+    }
+
 }

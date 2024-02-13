@@ -1,19 +1,21 @@
 /**
- * @File: Customer.java
+ * @Title: ICT 373 A1
  * @Author: Lim Wen Chao
- * @Date: 2024/2/2
- * @Version: 1.0
- * @Revision: none
- * @Usage: An abstract class that represents a customer
- * @Description: A customer can be a paying customer or an associate customer
+ * @Date: 2/2/2024
+ * @File: Customer.java
+ * @Purpose: An abstract class that represents a customer
+ * A customer can be a paying customer or an associate customer
  * A customer contains a name, email address, and a list of supplements they are interested in
+ * @Assumptions:
+ * @Limitations:
  */
 
-package src.customer;
+package customer;
 
 import java.util.ArrayList;
 
-import src.Magazine.Supplement;
+import magazine.Magazine;
+import magazine.Supplement;
 
 public abstract class Customer {
     private String name;
@@ -98,4 +100,8 @@ public abstract class Customer {
     public void setSupplements(ArrayList<Supplement> supplements) {
         this.supplements = supplements;
     }
+
+    public abstract String getWeeklyEmail();
+
+    public abstract String getMonthlyEmail(Magazine magazine);
 }
