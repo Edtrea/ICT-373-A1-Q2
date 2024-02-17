@@ -28,7 +28,6 @@ import java.util.Scanner;
 
 import magazine.*;
 import customer.*;
-import helper.ValidationHelper;
 
 public class TestDataHelper {
     /**
@@ -444,7 +443,7 @@ public class TestDataHelper {
         customers.add(new AssociateCustomer("Associate Customer 2", "assocust2@gmail.com", userSupplements,
                 customers.get(1)));
         // Create 2 associate customer without supplements
-        customers.add(new AssociateCustomer("Associate Customer 3", "assocust4@gmail.com", customers.get(1)));
+        customers.add(new AssociateCustomer("Associate Customer 3", "assocust3@gmail.com", customers.get(1)));
 
         // Add the associate customers to the paying customer's associate customers list
         // Add associate customer 1 to the paying customer's associate customers list

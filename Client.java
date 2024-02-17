@@ -44,24 +44,48 @@ public class Client {
              * Ask user if they want to create thier own set of supplements or use pre-built
              * ones
              */
+            Magazine magazine;
             System.out.println(
                     "Do you want to create your own test magazine? If not, pre-built test data are available. (y/n)");
-            response = scanner.nextLine().toLowerCase().trim();
-            Magazine magazine;
-            if (response.equals("y")) {
-                magazine = TestDataHelper.createTestMagazine(scanner);
-            } else {
-                magazine = TestDataHelper.createPreBuiltMagazine();
+            while (true) {
+                response = scanner.nextLine().toLowerCase().trim();
+                // Check if input is empty
+                if (response.isEmpty()) {
+                    System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                    continue;
+                }
+                // Proceed based on response
+                if (response.equals("y")) {
+                    magazine = TestDataHelper.createTestMagazine(scanner);
+                    break;
+                } else if (response.equals("n")) {
+                    magazine = TestDataHelper.createPreBuiltMagazine();
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                }
             }
 
+            ArrayList<Supplement> supplements = new ArrayList<Supplement>();
             System.err.println(
-                    "Do you want to create your own test supplements? If not, pre-built test data are avilable. (y/n)");
-            response = scanner.nextLine().toLowerCase().trim();
-            ArrayList<Supplement> supplements;
-            if (response.equals("y")) {
-                supplements = TestDataHelper.createTestSupplements(scanner);
-            } else {
-                supplements = TestDataHelper.createPreBuiltSupplements();
+                    "Do you want to create your own test supplements? If not, pre-built test data are available. (y/n)");
+            while (true) {
+                response = scanner.nextLine().toLowerCase().trim();
+                // Check if input is empty
+                if (response.isEmpty()) {
+                    System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                    continue;
+                }
+                // Proceed based on response
+                if (response.equals("y")) {
+                    supplements = TestDataHelper.createTestSupplements(scanner);
+                    break;
+                } else if (response.equals("n")) {
+                    supplements = TestDataHelper.createPreBuiltSupplements();
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                }
             }
 
             /**
@@ -71,11 +95,17 @@ public class Client {
              * Ask the user if they want to create their own test customers or use pre-built
              * ones
              */
+            ArrayList<Customer> customers = new ArrayList<>();
             System.out.println(
                     "Do you want to create your own test customers? If not, pre-built test data are available. (y/n)");
-            response = scanner.nextLine();
-            ArrayList<Customer> customers;
             while (true) {
+                response = scanner.nextLine().toLowerCase().trim();
+                // Check if input is empty
+                if (response.isEmpty()) {
+                    System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                    continue;
+                }
+
                 if (response.equals("y")) {
                     while (true) {
                         customers = TestDataHelper.createTestCustomers(supplements, scanner);
@@ -86,8 +116,11 @@ public class Client {
                         }
                     }
                     break;
-                } else {
+                } else if (response.equals("n")) {
                     customers = TestDataHelper.createPreBuiltCustomers(supplements);
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
                     break;
                 }
             }

@@ -9,8 +9,13 @@
  * 2. Name validation
  * 4. Payment method validation (card / bank account only)
  * 5. Payment details validation (card number or bank account number only)
- * @Assumptions:
+ * @Assumptions: 
+ * 1) The email validation is based on the general email format
+ * 2) The name validation is just to check if the name contains only alphabets and special characters like ',. -
+ * 3) The payment method validation is based on the two payment methods available  (card / bank)
+ * 4) The payment details validation is just to check if the payment details contain only numbers
  * @Limitations:
+ * 1) The payment details validation does not actually check if the card number or bank account number is valid
  */
 
 package helper;
