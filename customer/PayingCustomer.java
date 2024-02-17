@@ -22,44 +22,6 @@ public class PayingCustomer extends Customer {
     private ArrayList<AssociateCustomer> associateCustomers;
 
     /**
-     * Constructor for the PayingCustomer class
-     * 
-     * @param name               The name of the paying customer
-     * @param email              The email of the paying customer
-     * @param supplements        The list of supplements the paying customer is
-     *                           interested in
-     * @param paymentMethod      The payment method of the paying customer
-     * @param paymentDetail      The payment detail of the paying customer
-     * @param associateCustomers The list of associate customers for the paying
-     *                           customer
-     */
-    public PayingCustomer(String name, String email,
-            ArrayList<Supplement> supplements, String paymentMethod,
-            Integer paymentDetail, ArrayList<AssociateCustomer> associateCustomers) {
-        super(name, email, supplements);
-        this.paymentMethod = paymentMethod;
-        this.paymentDetail = paymentDetail;
-        this.associateCustomers = associateCustomers;
-    }
-
-    /**
-     * Constructor for the PayingCustomer class without supplements
-     * 
-     * @param name
-     * @param email
-     * @param paymentMethod
-     * @param paymentDetail
-     * @param associateCustomers
-     */
-    public PayingCustomer(String name, String email, String paymentMethod,
-            Integer paymentDetail, ArrayList<AssociateCustomer> associateCustomers) {
-        super(name, email);
-        this.paymentMethod = paymentMethod;
-        this.paymentDetail = paymentDetail;
-        this.associateCustomers = associateCustomers;
-    }
-
-    /**
      * Constructor for the PayingCustomer class without associate customers
      * 
      * @param name
@@ -209,13 +171,14 @@ public class PayingCustomer extends Customer {
      * @return The weekly email for the customer
      */
     public String getWeeklyEmail() {
-        String email = "To: " + this.getEmail() + "\n";
-        email += "Dear " + this.getName() + ",\n";
-        email += "Your magazine is ready to look at. You are currently subscribed to the following supplements:\n";
+        StringBuilder email = new StringBuilder();
+        email.append("To: " + this.getEmail() + "\n");
+        email.append("Dear " + this.getName() + ",\n");
+        email.append("Your magazine is ready to look at. You are currently subscribed to the following supplements:\n");
         for (Supplement supplement : this.getSupplements()) {
-            email += supplement.getName() + "\n";
+            email.append(supplement.getName() + "\n");
         }
-        return email;
+        return email.toString();
     }
 
     /**

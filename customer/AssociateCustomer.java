@@ -94,13 +94,14 @@ public class AssociateCustomer extends Customer {
      * @return The weekly email content for the associate customer
      */
     public String getWeeklyEmail() {
-        String email = "To: " + getEmail() + "\n";
-        email += "Dear " + getName() + ",\n";
-        email += "Your magazine is ready to look at. You are currently subscribed to the following supplements:\n";
+        StringBuilder email = new StringBuilder();
+        email.append("To: " + getEmail() + "\n");
+        email.append("Dear " + getName() + ",\n");
+        email.append("Your magazine is ready to look at. You are currently subscribed to the following supplements:\n");
         for (Supplement supplement : getSupplements()) {
-            email += supplement.getName() + "\n";
+            email.append(supplement.getName() + "\n");
         }
-        return email;
+        return email.toString();
     }
 
     /*

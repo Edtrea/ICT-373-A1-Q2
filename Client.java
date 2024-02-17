@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import magazine.*;
+import customer.AssociateCustomer;
 import customer.Customer;
 import customer.PayingCustomer;
 import helper.TestDataHelper;
@@ -45,20 +46,20 @@ public class Client {
              */
             System.out.println(
                     "Do you want to create your own test magazine? If not, pre-built test data are available. (y/n)");
-            response = scanner.nextLine();
+            response = scanner.nextLine().toLowerCase().trim();
             Magazine magazine;
             if (response.equals("y")) {
-                magazine = TestDataHelper.createTestMagazine();
+                magazine = TestDataHelper.createTestMagazine(scanner);
             } else {
                 magazine = TestDataHelper.createPreBuiltMagazine();
             }
 
             System.err.println(
                     "Do you want to create your own test supplements? If not, pre-built test data are avilable. (y/n)");
-            response = scanner.nextLine();
+            response = scanner.nextLine().toLowerCase().trim();
             ArrayList<Supplement> supplements;
             if (response.equals("y")) {
-                supplements = TestDataHelper.createTestSupplements();
+                supplements = TestDataHelper.createTestSupplements(scanner);
             } else {
                 supplements = TestDataHelper.createPreBuiltSupplements();
             }
@@ -77,7 +78,7 @@ public class Client {
             while (true) {
                 if (response.equals("y")) {
                     while (true) {
-                        customers = TestDataHelper.createTestCustomers(supplements);
+                        customers = TestDataHelper.createTestCustomers(supplements, scanner);
                         if (customers == null) {
                             System.out.println("Invalid input. Please try again.");
                         } else {
@@ -106,6 +107,7 @@ public class Client {
                 System.out.println("exit. Exit program");
                 System.out.println();
                 response = scanner.nextLine();
+
                 switch (response) {
                     case "c":
                         /**
@@ -138,7 +140,15 @@ public class Client {
                         /**
                          * e. add a new customer to the magazine service
                          */
-                        customers.add(TestDataHelper.createTestCustomer(customers, supplements));
+                        Customer newCustomer = TestDataHelper.createTestCustomer(customers, supplements, scanner);
+                        // If newCustomer is an associate customer, add it to the list of associate
+                        // customer for the paying customer that is linked to the new associate customer
+                        if (newCustomer instanceof AssociateCustomer) {
+                            PayingCustomer payingCustomer = (PayingCustomer) ((AssociateCustomer) newCustomer)
+                                    .getPayingCustomer();
+                            payingCustomer.addAssociateCustomer((AssociateCustomer) newCustomer);
+                        }
+                        customers.add(newCustomer);
                         break;
                     case "f":
                         /**
@@ -146,17 +156,31 @@ public class Client {
                          */
                         // Display the list of customers
                         for (int i = 0; i < customers.size(); i++) {
-                            System.out.println(i + ". " + customers.get(i).getName());
+                            System.out.println(i + 1 + ". " + customers.get(i).getName());
                         }
-                        System.out.println("Enter the index of the customer to remove: ");
-                        int index = scanner.nextInt();
-                        if (index < 0 || index >= customers.size()) {
-                            System.out.println("Invalid index");
-                            break;
+                        while (true) {
+                            System.out.println("Enter the index of the customer to remove: ");
+                            String input = scanner.nextLine().trim();
+                            // Check if input is empty
+                            if (input.isEmpty()) {
+                                System.out
+                                        .println("Blank or empty inputs are not allowed. Please enter a valid index.");
+                                continue;
+                            }
+                            // Try to parse the input as an integer
+                            try {
+                                int index = Integer.parseInt(input);
+                                if (index < 1 || index > customers.size()) {
+                                    System.out.println("Invalid index");
+                                } else {
+                                    Customer customer = customers.get(index - 1);
+                                    customers = TestDataHelper.removeCustomer(customers, customer);
+                                    break;
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("A valid index expected, but got: " + input);
+                            }
                         }
-
-                        Customer customer = customers.get(index);
-                        customers = TestDataHelper.removeCustomer(customers, customer);
 
                         break;
                     case "exit":
