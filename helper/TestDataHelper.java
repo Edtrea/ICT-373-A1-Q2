@@ -18,6 +18,7 @@
  * 
  * Inputs should be validated with the ValidationHelper class before being passed to the methods in this class
  * @Assumptions: 
+ * createPreBuiltCustomers() assumes that the supplementsList contains at least 5 supplements
  * @Limitations:
  */
 
@@ -102,12 +103,20 @@ public class TestDataHelper {
                 }
             }
             System.out.println("Do you want to add another supplement? (y/n)");
-            String response = scanner.nextLine();
-            if (response.equals("n")) {
-                break;
+            String response = scanner.nextLine().toLowerCase().trim();
+            while (true) {
+                if (response.isEmpty()) {
+                    System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                } else if (response.equals("n")) {
+                    return supplements;
+                } else if (response.equals("y")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                    continue;
+                }
             }
         }
-        return supplements;
     }
 
     /**
@@ -138,6 +147,7 @@ public class TestDataHelper {
         String name;
         String email;
         ArrayList<Supplement> userSupplements = new ArrayList<>();
+        String response;
 
         while (true) {
             System.out.println("Enter the name of the customer: ");
@@ -164,51 +174,62 @@ public class TestDataHelper {
                         + email);
             }
         }
-        System.out.println("Does the customer subscribe to any supplements? (y/n)");
-        String response = scanner.nextLine();
-        if (response.equals("y")) {
-            for (int i = 0; i < supplementsList.size(); i++) {
-                System.out.println(
-                        i + 1 + ". " + supplementsList.get(i).getName() + " - "
-                                + supplementsList.get(i).getWeeklyCost());
-            }
-            while (true) {
-                System.out.println("Enter the number of the supplement that is beside the name: ");
-                String input = scanner.nextLine().trim();
-                // Check if input is empty
-                if (input.isEmpty()) {
-                    System.out.println("Blank or empty inputs are not allowed. Please enter a valid number.");
-                    continue;
+
+        while (true) {
+            System.out.println("Does the customer subscribe to any supplements? (y/n)");
+            response = scanner.nextLine().toLowerCase().trim();
+            if (response.isEmpty()) {
+                System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                continue;
+            } else if (response.equals("n")) {
+                break;
+            } else if (response.equals("y")) {
+                for (int i = 0; i < supplementsList.size(); i++) {
+                    System.out.println(
+                            i + 1 + ". " + supplementsList.get(i).getName() + " - "
+                                    + supplementsList.get(i).getWeeklyCost());
                 }
-                // Try to parse the input as an integer
-                try {
-                    int supplementNum = Integer.parseInt(input);
-                    if (supplementNum > 0 && supplementNum <= supplementsList.size()) {
-                        Supplement selectedSupplement = supplementsList.get(supplementNum - 1);
-                        if (!userSupplements.contains(selectedSupplement)) {
-                            userSupplements.add(selectedSupplement);
-                        } else {
-                            System.out.println("This supplement is already added.");
-                        }
-                    } else {
-                        System.out.println("Not a valid number : " + supplementNum);
+                while (true) {
+                    System.out.println("Enter the number of the supplement that is beside the name: ");
+                    String input = scanner.nextLine().trim();
+                    // Check if input is empty
+                    if (input.isEmpty()) {
+                        System.out.println("Blank or empty inputs are not allowed. Please enter a valid number.");
                         continue;
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("A valid number expected, but got: " + input);
-                    continue;
-                }
-
-                while (true) {
-                    System.out.println("Do you want to add another supplement? (y/n)");
-                    response = scanner.nextLine().toLowerCase().trim();
-                    if (response.isEmpty()) {
-                        System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
-                    } else if (response.equals("n") || response.equals("y")) {
-                        break;
-                    } else {
-                        System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                    // Try to parse the input as an integer
+                    try {
+                        int supplementNum = Integer.parseInt(input);
+                        if (supplementNum > 0 && supplementNum <= supplementsList.size()) {
+                            Supplement selectedSupplement = supplementsList.get(supplementNum - 1);
+                            if (!userSupplements.contains(selectedSupplement)) {
+                                userSupplements.add(selectedSupplement);
+                            } else {
+                                System.out.println("This supplement is already added.");
+                            }
+                        } else {
+                            System.out.println("Not a valid number : " + supplementNum);
+                            continue;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("A valid number expected, but got: " + input);
                         continue;
+                    }
+
+                    while (true) {
+                        System.out.println("Do you want to add another supplement? (y/n)");
+                        response = scanner.nextLine().toLowerCase().trim();
+                        if (response.isEmpty()) {
+                            System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                        } else if (response.equals("n") || response.equals("y")) {
+                            break;
+                        } else {
+                            System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                            continue;
+                        }
+                    }
+                    if (response.equals("n")) {
+                        break;
                     }
                 }
                 if (response.equals("n")) {
@@ -281,6 +302,7 @@ public class TestDataHelper {
                 break;
             } else {
                 System.out.println("Not a valid payment detail : " + paymentDetail);
+                continue;
             }
         }
 
@@ -354,7 +376,6 @@ public class TestDataHelper {
         } else {
             return new AssociateCustomer(name, email, payingCustomer);
         }
-
     }
 
     /**
@@ -366,6 +387,7 @@ public class TestDataHelper {
      */
     public static ArrayList<Customer> createTestCustomers(ArrayList<Supplement> supplementsList, Scanner scanner) {
         ArrayList<Customer> customers = new ArrayList<Customer>();
+        String response;
         while (true) {
             Customer customer = createTestCustomer(customers, supplementsList, scanner);
             if (customer != null) {
@@ -389,14 +411,25 @@ public class TestDataHelper {
             } else {
                 continue;
             }
-            System.out.println("Do you want to add a customer? (y/n)");
-            String response = scanner.nextLine();
+
+            while (true) {
+                System.out.println("Do you want to add a customer? (y/n)");
+                response = scanner.nextLine().toLowerCase().trim();
+                if (response.isEmpty()) {
+                    System.out.println("Blank or empty inputs are not allowed. Please enter 'y' or 'n'.");
+                    continue;
+                } else if (response.equals("n") || response.equals("y")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                    continue;
+                }
+            }
             if (response.equals("n")) {
                 break;
             }
         }
         return customers;
-
     }
 
     /**

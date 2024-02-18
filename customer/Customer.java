@@ -18,6 +18,10 @@ import magazine.Magazine;
 import magazine.Supplement;
 
 public abstract class Customer {
+    /**
+     * A customer contains a name, email address, and a list of supplements they are
+     * interested in
+     */
     private String name;
     private String email;
     private ArrayList<Supplement> supplements;
